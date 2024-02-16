@@ -9,7 +9,7 @@ void addInput(int (&ary)[], int &counter);
 void addFile(int (&ary)[], int &counter);
 void sort(int (&ary)[], int &index);
 void print(int ary[], int counter);
-void remove(int (&ary)[], int &index, int &counter);
+int remove(int (&ary)[], int &index, int &counter);
 void removeAll(int (&ary)[], int &index, int &counter);
 void arrayNuller(int (&ary)[], int &size);//Makes all elements in an array null
 
@@ -22,19 +22,15 @@ int main() {
   int size = sizeof(ary)/sizeof(ary[0]);
   arrayNuller(ary, size);
   while(stillRunning == true) {
-  cout << "please enter add, print, remove, removeALL, or quit " << endl;
+  cout << "please enter addFile, addInput, print, remove, removeALL, or quit " << endl;
     cin >> input;
     cin.ignore(256, '\n');
-    if(strcmp(input, "add") == 0) {
-      cout << "enter file or input" << endl;
-      cin >> input;
-      if (strcmp(input, "input") == 0) {
+      if (strcmp(input, "addInput") == 0) {
 	addInput(ary, counter);
       }
-      if (strcmp(input, "file") == 0) {
+      if (strcmp(input, "addFile") == 0) {
         addFile(ary, counter);
       }
-    }
     if(strcmp(input, "print") == 0) {
       print(ary, counter);
     }
@@ -43,8 +39,7 @@ int main() {
       counter = 0;
     }
      if(strcmp(input, "remove") == 0) {
-       remove(ary, index, counter);
-      counter = 0;
+       cout << remove(ary, index, counter) << endl;
     }
 
     if(strcmp(input, "quit") == 0) {
@@ -72,6 +67,7 @@ void addInput(int (&ary)[], int &counter) {
     cin.ignore(256, '\n');
     ary[counter] = input;
     sort(ary, counter);
+    print(ary,counter);
     counter++;
     i++;
   }
@@ -83,40 +79,64 @@ void addFile(int (&ary)[], int &counter) {
   char input[20];
   cin >> input;
   ifstream fin(input);
-  int temp = 0;
+  char* temp;
+  temp = new char[20];
   while(fin >> temp) {
-    cout << temp << endl;
-    ary[counter] = temp;
+    ary[counter] = (int)(*temp);
     counter++;
+    sort(ary, counter); 
+    temp = new char[20];
   }
+  print(ary, counter);
+  cout << "alive" << endl;
   fin.close();
+  cout << "dead" << endl;
 }
 
 
 void sort(int (&ary)[], int &index) {
-  int parent = (floor(index / 2));
-  if(ary[index] > ary[parent]) {
-    swap(ary[index], ary[parent]);
-    int newParrent =  (floor(parent / 2));
+   int parent = (floor(index / 2));
+   if(ary[index] > ary[parent]) {
+     swap(ary[index], ary[parent]);
+     int newParrent = (floor(parent / 2));
       if (ary[parent] > ary[newParrent]) {
 	sort(ary,parent);
       }
-  }
-
+   }
 }
+
+
 
 
 void print(int ary[], int counter) {
+  int level = 0;
   for (int i = 0; i < counter; ++i) {
-        cout << ary[i] << " ";
-    cout << "\n";
+    int current = ary[i];
+    while(ary[current] != ary[0]) {
+	level++;
+	current = (floor(current/2));
+    }
+    for(int i =0; i < level; i++) {
+      //cout << '\t';
+    }
+    //cout << ary[i] << endl;
+    level = 0;
+    int parent = (floor(i/2));
+    int current1 = ary[i];
+    int rChild = (i * 2 + 1);
+    int lChild = (i * 2);
+
+    cout << "current " << current1 << "child " << ary[lChild] << "parrent " << ary[parent] << endl;
 }
 }
 
-void remove(int (&ary)[], int &index, int &counter) {
-  ary[0] = NULL;
+int remove(int (&ary)[], int &index, int &counter) {
+  int temp = ary[0];
+  ary[0] = 0;
   counter = counter - 1;
-  //sort(ary, index+1);
+  index++;
+  sort(ary, index);
+  return temp;
 }
 
 void removeAll(int (&ary)[], int &index,int &counter) {
