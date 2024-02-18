@@ -22,7 +22,7 @@ int main() {
   int size = sizeof(ary)/sizeof(ary[0]);
   arrayNuller(ary, size);
   while(stillRunning == true) {
-  cout << "please enter addFile, addInput, print, remove, removeALL, or quit " << endl;
+  cout << "please enter addFile, addInput, print, remove, removeAll, or quit " << endl;
     cin >> input;
     cin.ignore(256, '\n');
       if (strcmp(input, "addInput") == 0) {
@@ -67,7 +67,6 @@ void addInput(int (&ary)[], int &counter) {
     cin.ignore(256, '\n');
     ary[counter] = input;
     sort(ary, counter);
-    print(ary,counter);
     counter++;
     i++;
   }
@@ -95,7 +94,7 @@ void addFile(int (&ary)[], int &counter) {
 
 
 void sort(int (&ary)[], int &index) {
-   int parent = (floor(index / 2));
+  int parent = (floor(index / 2));
    if(ary[index] > ary[parent]) {
      swap(ary[index], ary[parent]);
      int newParrent = (floor(parent / 2));
@@ -121,18 +120,18 @@ void print(int ary[], int counter) {
     }
     //cout << ary[i] << endl;
     level = 0;
-    int parent = (floor(i/2));
+    int parent = (floor((i-1)/2));
     int current1 = ary[i];
     int rChild = (i * 2 + 1);
-    int lChild = (i * 2);
+    int lChild = (i * 2 + 2);
 
-    cout << "current " << current1 << "child " << ary[lChild] << "parrent " << ary[parent] << endl;
+    cout << "current " << current1 << "rchild " << ary[rChild] << "lchild " << ary[lChild] << "parrent " << ary[parent] << endl;
 }
 }
 
 int remove(int (&ary)[], int &index, int &counter) {
   int temp = ary[0];
-  ary[0] = 0;
+  ary[0] = ary[counter];
   counter = counter - 1;
   index++;
   sort(ary, index);
