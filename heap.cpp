@@ -8,7 +8,7 @@ using namespace std;
 void addInput(int (&ary)[], int &counter);
 void addFile(int (&ary)[], int &counter);
 void sort(int (&ary)[], int index);
-void print(int ary[], int counter);
+void print(int ary[], int counter, int level, int index);
 int remove(int (&ary)[], int index, int &counter);
 void removeAll(int (&ary)[], int index, int &counter);
 void arrayNuller(int (&ary)[], int &size);//Makes all elements in an array null
@@ -33,7 +33,7 @@ int main() {
         addFile(ary, counter);
       }
     if(strcmp(input, "print") == 0) {
-      print(ary, counter);
+      print(ary, counter, 0, 0);
     }
      if(strcmp(input, "removeAll") == 0) {
        removeAll(ary, index, counter);
@@ -86,7 +86,6 @@ void addFile(int (&ary)[], int &counter) {
     sort(ary, counter); 
     temp = new char[20];
   }
-  print(ary, counter);
   cout << "alive" << endl;
   fin.close();
   cout << "dead" << endl;
@@ -107,26 +106,17 @@ void sort(int (&ary)[], int index) {
 
 
 
-void print(int ary[], int counter) {
-  int level = 0;
-  for (int i = 0; i < counter; ++i) {
-    int current = ary[i];
-    while(ary[current] != ary[0]) {
-	level++;
-	current = (floor(current/2));
-    }
-    for(int i =0; i < level; i++) {
-      //cout << '\t';
-    }
-    //cout << ary[i] << endl;
-    level = 0;
-    int parent = (floor((i-1)/2));
-    int current1 = ary[i];
-    int rChild = (i * 2 + 1);
-    int lChild = (i * 2 + 2);
+void print(int ary[], int counter, int level, int index) {
+  if (index >= counter) {
+    return;
+  }
+  print(ary, counter, level + 1, 2 * index + 1);
 
-    cout << "current " << current1 << "rchild " << ary[rChild] << "lchild " << ary[lChild] << "parrent " << ary[parent] << endl;
-}
+  for(int i = 0; i < level; i++) {
+    cout << "\t";
+  }
+  cout << ary[index] << endl;
+  print(ary, counter, level + 1, 2 * index + 2);
 }
 
 int remove(int (&ary)[], int index, int &counter) {
