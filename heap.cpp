@@ -7,11 +7,12 @@ using namespace std;
 
 void addInput(int (&ary)[], int &counter);
 void addFile(int (&ary)[], int &counter);
-void sort(int (&ary)[], int &index);
+void sort(int (&ary)[], int index);
 void print(int ary[], int counter);
-int remove(int (&ary)[], int &index, int &counter);
-void removeAll(int (&ary)[], int &index, int &counter);
+int remove(int (&ary)[], int index, int &counter);
+void removeAll(int (&ary)[], int index, int &counter);
 void arrayNuller(int (&ary)[], int &size);//Makes all elements in an array null
+void reverseSort(int (&ary)[], int index);
 
 int main() {
   char input[20];
@@ -70,7 +71,6 @@ void addInput(int (&ary)[], int &counter) {
     counter++;
     i++;
   }
-  print(ary, counter);
 }
 
 void addFile(int (&ary)[], int &counter) {
@@ -93,7 +93,7 @@ void addFile(int (&ary)[], int &counter) {
 }
 
 
-void sort(int (&ary)[], int &index) {
+void sort(int (&ary)[], int index) {
   int parent = (floor(index / 2));
    if(ary[index] > ary[parent]) {
      swap(ary[index], ary[parent]);
@@ -129,16 +129,16 @@ void print(int ary[], int counter) {
 }
 }
 
-int remove(int (&ary)[], int &index, int &counter) {
+int remove(int (&ary)[], int index, int &counter) {
   int temp = ary[0];
   ary[0] = ary[counter];
+  ary[counter] = 0;
   counter = counter - 1;
-  index++;
-  sort(ary, index);
+  reverseSort(ary, index);
   return temp;
 }
 
-void removeAll(int (&ary)[], int &index,int &counter) {
+void removeAll(int (&ary)[], int index,int &counter) {
   int i = 0;
   while(i < counter) {
     remove(ary,index,counter);
@@ -146,3 +146,18 @@ void removeAll(int (&ary)[], int &index,int &counter) {
   }
 }
 
+void reverseSort(int (&ary)[], int index) {
+  int rChild = (index * 2 + 1);
+  int lChild = (index * 2 + 2);
+  int largest = 0;
+  if (ary[rChild] < ary[lChild]) {
+    largest = lChild;
+  }
+  else {
+    largest = rChild;
+  }
+  if(ary[largest] > ary[index] ) {
+    swap(ary[index], ary[largest]);
+    reverseSort(ary, largest);
+  }
+}
