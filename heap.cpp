@@ -1,3 +1,7 @@
+//Arjun Vinsel
+//21/FEB/2024
+//This program will take ints and sort them into a max heap
+
 #include<iostream>
 #include<cstring>
 #include<cmath>
@@ -5,16 +9,16 @@
 
 using namespace std;
 
-void addInput(int (&ary)[], int &counter);
-void addFile(int (&ary)[], int &counter);
-void sort(int (&ary)[], int index);
-void print(int ary[], int counter, int level, int index);
-int remove(int (&ary)[], int index, int &counter);
-void removeAll(int (&ary)[], int index, int &counter);
+void addInput(int (&ary)[], int &counter);// Will add inputs from the line
+void addFile(int (&ary)[], int &counter);//will add inputs from a file
+void sort(int (&ary)[], int index);//will add the inputs
+void print(int ary[], int counter, int level, int index);//will print the inputs
+int remove(int (&ary)[], int index, int &counter);//will remove the root and print it
+void removeAll(int (&ary)[], int index, int &counter);//will remove all values
 void arrayNuller(int (&ary)[], int &size);//Makes all elements in an array null
-void reverseSort(int (&ary)[], int index);
+void reverseSort(int (&ary)[], int index);//called during remove which must go through tree in reverse
 
-int main() {
+int main() {//main funtion
   char input[20];
   bool stillRunning = true;
   int ary[100];
@@ -50,13 +54,13 @@ int main() {
   return 0;
 }
 
-void arrayNuller(int (&ary)[], int &size) {
+void arrayNuller(int (&ary)[], int &size) {//Makes all elemnts in an array NULL
   for(int i = 0; i < size; i++) {
     ary[i] = NULL;
   }
 }
 
-void addInput(int (&ary)[], int &counter) {
+void addInput(int (&ary)[], int &counter) { // Will add inputs from the line
   cout << "enter how many numbers you wish to input up too 100 " << endl;
   int inputL = 0;
   int i = 0;
@@ -73,26 +77,22 @@ void addInput(int (&ary)[], int &counter) {
   }
 }
 
-void addFile(int (&ary)[], int &counter) {
+void addFile(int (&ary)[], int &counter) {//Will add ints from a file
   cout << "enter file name " << endl;
   char input[20];
   cin >> input;
   ifstream fin(input);
-  char* temp;
-  temp = new char[20];
+  int temp;
   while(fin >> temp) {
-    ary[counter] = (int)(*temp);
+    ary[counter] = temp;
     counter++;
     sort(ary, counter); 
-    temp = new char[20];
   }
-  cout << "alive" << endl;
   fin.close();
-  cout << "dead" << endl;
 }
 
 
-void sort(int (&ary)[], int index) {
+void sort(int (&ary)[], int index) {//Will sort the ints
   int parent = (floor(index / 2));
    if(ary[index] > ary[parent]) {
      swap(ary[index], ary[parent]);
@@ -106,7 +106,7 @@ void sort(int (&ary)[], int index) {
 
 
 
-void print(int ary[], int counter, int level, int index) {
+void print(int ary[], int counter, int level, int index) {//will print the tree
   if (index >= counter) {
     return;
   }
@@ -119,7 +119,7 @@ void print(int ary[], int counter, int level, int index) {
   print(ary, counter, level + 1, 2 * index + 2);
 }
 
-int remove(int (&ary)[], int index, int &counter) {
+int remove(int (&ary)[], int index, int &counter) {//removes the root
   int temp = ary[0];
   ary[0] = ary[counter];
   ary[counter] = 0;
@@ -128,7 +128,7 @@ int remove(int (&ary)[], int index, int &counter) {
   return temp;
 }
 
-void removeAll(int (&ary)[], int index,int &counter) {
+void removeAll(int (&ary)[], int index,int &counter) {//will remove all elements in the heap
   int i = 0;
   while(i < counter) {
     remove(ary,index,counter);
@@ -136,7 +136,7 @@ void removeAll(int (&ary)[], int index,int &counter) {
   }
 }
 
-void reverseSort(int (&ary)[], int index) {
+void reverseSort(int (&ary)[], int index) {//called during remove. Will sort through the list top to bottom.
   int rChild = (index * 2 + 1);
   int lChild = (index * 2 + 2);
   int largest = 0;
