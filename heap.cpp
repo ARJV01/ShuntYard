@@ -85,8 +85,8 @@ void addFile(int (&ary)[], int &counter) {//Will add ints from a file
   int temp;
   while(fin >> temp) {
     ary[counter] = temp;
+    sort(ary, counter);
     counter++;
-    sort(ary, counter); 
   }
   fin.close();
 }
@@ -96,10 +96,7 @@ void sort(int (&ary)[], int index) {//Will sort the ints
   int parent = (floor(index / 2));
    if(ary[index] > ary[parent]) {
      swap(ary[index], ary[parent]);
-     int newParrent = (floor(parent / 2));
-      if (ary[parent] > ary[newParrent]) {
 	sort(ary,parent);
-      }
    }
 }
 
@@ -139,14 +136,14 @@ void removeAll(int (&ary)[], int index,int &counter) {//will remove all elements
 void reverseSort(int (&ary)[], int index) {//called during remove. Will sort through the list top to bottom.
   int rChild = (index * 2 + 1);
   int lChild = (index * 2 + 2);
-  int largest = 0;
-  if (ary[rChild] < ary[lChild]) {
-    largest = lChild;
-  }
-  else {
+  int largest = index;
+  if (ary[rChild] > ary[largest]) {
     largest = rChild;
   }
-  if(ary[largest] > ary[index] ) {
+  if(ary[lChild] > ary[largest]) {
+    largest = lChild;
+  }
+  if(largest != index) {
     swap(ary[index], ary[largest]);
     reverseSort(ary, largest);
   }
