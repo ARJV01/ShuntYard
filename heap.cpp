@@ -78,7 +78,7 @@ void addInput(int (&ary)[], int &counter) { // Will add inputs from the line
 }
 
 void addFile(int (&ary)[], int &counter) {//Will add ints from a file
-  cout << "enter file name " << endl;
+  cout << "enter file name(and .txt) " << endl;
   char input[20];
   cin >> input;
   ifstream fin(input);
