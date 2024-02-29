@@ -1,4 +1,5 @@
 #include<iostream>
+#include <cctype>
 #include<cstring>
 #include<iomanip>
 
@@ -56,9 +57,9 @@ bool isOp(char a);
 void printQ(Node* head);
 void arrayNuller(char ary[]);
 void pop(Node* &stackFront);//removes the top of the stack
-void push(Node* &stackFront, char* newValue);//pushs a new value to the top of the stack
+void push(Node* &stackFront, char newValue);//pushs a new value to the top of the stack
 char peek(Node* stackFront);//returns the top value of the stack
-void enqueue(Node* &qFront, Node* &qTail, char* newValue);//Puts an new node at the back of the queue
+void enqueue(Node* &qFront, Node* &qTail, char newValue);//Puts an new node at the back of the queue
 Node* dequeue(Node* &qFront);//removes the node at the front of the queue
 void shunter(char ary[], Node* &stackFront, Node* &qTail, Node* &qFront, int counter);
 
@@ -160,13 +161,15 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
   while(stackFront != NULL) {
     enqueue(qFront, qTail, stackFront->getValue());
     pop(stackFront);
-  }
+  } 
   printQ(qFront);
 }
 
 void printQ(Node* head) {
   while(head != NULL) {
     cout << head -> getValue() << ' ';
+    Node* temp = head;
+    head = head->getNext();
     dequeue(head);
   }
 }
@@ -175,7 +178,7 @@ int getP(char a) {
   if(a == '+' || a == '-') {
     return 1;
   }
-  if(a = '^') {
+  if(a == '^') {
     return 3;
   }
   if(a == '/' || a== '*') {
