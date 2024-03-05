@@ -124,7 +124,7 @@ void enqueue(Node* &qFront, Node* &qTail,char newValue) {
   if(qTail == NULL) {
     qFront = qTail;
   }
-  cout << qTail -> getValue();
+  //cout << qTail -> getValue();
 }
 
 Node* dequeue(Node* &qFront) {
@@ -160,7 +160,7 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
 	}
 	push(stackFront, ary[i]);
       }
-      //printQ(qFront);
+      printQ(qFront);
   }
   while(stackFront != NULL) {
     enqueue(qFront, qTail, stackFront->getValue());
@@ -179,8 +179,8 @@ void printQ(Node* head) {
     head = head->getNext();
     count++;
   }
-  for(int i; i < count; i++) {
-    //cout << temp[i] << endl;
+  for(int i = 0; i < count; i++) {
+    cout << temp[i] << endl;
   }
 }
 
