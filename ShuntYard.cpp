@@ -52,16 +52,16 @@ public:
   ~NodeBT() {}
 };
 
-int getP(char a);
-bool isOp(char a);
-void printQ(Node* head);
-void arrayNuller(char ary[]);
+int getP(char a);// will return the precedence of an operator
+bool isOp(char a);//will determine if somthing is an operator
+void printQ(Node* head);//will print the queue, used for debugging
+void arrayNuller(char ary[]);//will null an array
 void pop(Node* &stackFront);//removes the top of the stack
 void push(Node* &stackFront, char newValue);//pushs a new value to the top of the stack
 char peek(Node* stackFront);//returns the top value of the stack
 void enqueue(Node* &qFront, Node* &qTail, char newValue);//Puts an new node at the back of the queue
 Node* dequeue(Node* &qFront);//removes the node at the front of the queue
-void shunter(char ary[], Node* &stackFront, Node* &qTail, Node* &qFront, int counter);
+void shunter(char ary[], Node* &stackFront, Node* &qTail, Node* &qFront, int counter);// will convert an expression from infix notation to postfix notation.
 
 int main() {
   Node* stackFront = NULL;
@@ -81,7 +81,7 @@ int main() {
     }
   }
   shunter(ary,stackFront,qTail,qFront,counter);
-  
+  //printQ(qFront);
   return 0;
 }
 
@@ -124,6 +124,7 @@ void enqueue(Node* &qFront, Node* &qTail,char newValue) {
   if(qTail == NULL) {
     qFront = qTail;
   }
+  cout << qTail -> getValue();
 }
 
 Node* dequeue(Node* &qFront) {
@@ -148,7 +149,9 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
 	  enqueue(qFront,qTail,(stackFront->getValue()));
 	  pop(stackFront);
 	}
+	if(stackFront != NULL) {
 	pop(stackFront);
+	}
       }
       if(isOp(ary[i]) == true) {
 	while(stackFront != NULL && getP(ary[i]) <= getP(stackFront->getValue())) {
@@ -157,20 +160,27 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
 	}
 	push(stackFront, ary[i]);
       }
+      //printQ(qFront);
   }
   while(stackFront != NULL) {
     enqueue(qFront, qTail, stackFront->getValue());
     pop(stackFront);
-  } 
-  printQ(qFront);
+  }
+  //printQ(qFront);
+  //cout << qTail -> getValue() << endl;
 }
 
 void printQ(Node* head) {
+  char temp[20];
+  arrayNuller(temp);
+  int count = 0;
   while(head != NULL) {
-    cout << head -> getValue() << ' ';
-    Node* temp = head;
+    temp[count] = head -> getValue();
     head = head->getNext();
-    dequeue(head);
+    count++;
+  }
+  for(int i; i < count; i++) {
+    //cout << temp[i] << endl;
   }
 }
 
