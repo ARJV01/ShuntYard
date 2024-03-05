@@ -34,30 +34,50 @@ public:
 class NodeBT {
 public:
   char value;
-  Node* next;
+  NodeBT* right;
+  NodeBT* left;
+  NodeBT* next;
 
   NodeBT(char newValue) {
+    left = NULL;
+    right = NULL;
     next = NULL;
     value = newValue;
   }
   char getValueBT() {
     return value;
   }
-  Node* getNextBT() {
+  NodeBT* getR() {
+    return right;
+  }
+  void setR(NodeBT* newRight) {
+    right = newRight;
+  }
+  NodeBT* getL() {
+    return left;
+  }
+  void setN(NodeBT* newNext) {
+    next = newNext;
+  }
+  NodeBT* getN() {
     return next;
   }
-  void setNextBT(Node* nextNode) {
-    next = nextNode;
+  void setL(NodeBT* newLeft) {
+    left = newLeft;
   }
   ~NodeBT() {}
 };
 
+void popBt(NodeBT* &sfc);
+void printBT(NodeBT* sfc);
+void btMaker(Node* qTail, Node* qFront,NodeBT* sfc);//makes the binary tree
 int getP(char a);// will return the precedence of an operator
 bool isOp(char a);//will determine if somthing is an operator
 void printQ(Node* head);//will print the queue, used for debugging
 void arrayNuller(char ary[]);//will null an array
 void pop(Node* &stackFront);//removes the top of the stack
 void push(Node* &stackFront, char newValue);//pushs a new value to the top of the stack
+void pushBt(NodeBT* &stackFront, NodeBT* temp);
 char peek(Node* stackFront);//returns the top value of the stack
 void enqueue(Node* &qFront, Node* &qTail, char newValue);//Puts an new node at the back of the queue
 Node* dequeue(Node* &qFront);//removes the node at the front of the queue
@@ -67,6 +87,7 @@ int main() {
   Node* stackFront = NULL;
   Node* qFront = NULL;
   Node* qTail = NULL;
+  NodeBT* sfc = NULL;
   char input[20];
   char ary[20];
   arrayNuller(input);
@@ -75,13 +96,14 @@ int main() {
   cout << "please enter the equation" << endl;
   cin.getline(input, 80);
   for(int i = 0; i < 20; i++) {
-    if(input[i] != ' ' && input[i] != NULL) {
+    if(input[i] != ' ' && input[i] != '\n' && input[i] != NULL) {
       ary[counter] = input[i];
       counter++;
     }
   }
   shunter(ary,stackFront,qTail,qFront,counter);
-  //printQ(qFront);
+  printQ(qFront);
+  btMaker(qTail,qFront,sfc);
   return 0;
 }
 
@@ -95,8 +117,13 @@ void pop(Node* &stackFront) {
   if(stackFront != NULL) {
   Node* temp;
   temp = stackFront;
-  stackFront = temp -> getNext();
-  delete temp;
+  if(temp -> getNext() != NULL) {
+    stackFront = temp -> getNext();
+    delete temp;
+  }
+  else {
+    stackFront = NULL;
+  }
   }
 }
 
@@ -136,38 +163,86 @@ Node* dequeue(Node* &qFront) {
 }
 
 void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter) {
-  for(int i = 0; i < counter; i++) {
-    if(isdigit(ary[i]) == true){//if number put in stack
+   for(int i = 0; i < counter; i++) {
+    if(isdigit(ary[i])){//if number put in stack
       enqueue(qFront, qTail, ary[i]);
     }
 
-      if(stackFront == NULL || ary[i] == '(') {
-	push(stackFront,ary[i]);
+      if(ary[i] == '(') {
+        push(stackFront,ary[i]);
       }
-      
+
       if(ary[i] == ')') {
-	while(stackFront != NULL && stackFront -> getValue() != '(') {
-	  enqueue(qFront,qTail,(stackFront->getValue()));
-	  pop(stackFront);
-	}
-	if(stackFront != NULL) {
-	pop(stackFront);
-	}
+
+        while(stackFront != NULL && stackFront -> getValue() != '(') {
+          enqueue(qFront,qTail,(stackFront->getValue()));
+          pop(stackFront);
+        }
+
+        if(stackFront != NULL) {
+        pop(stackFront);
+        }
+
       }
-      if(isOp(ary[i]) == true) {
-	while(stackFront != NULL && getP(ary[i]) <= getP(stackFront->getValue())) {
-	  enqueue(qFront,qTail,stackFront -> getValue());
-	  pop(stackFront);
-	}
-	push(stackFront, ary[i]);
+      if(isOp(ary[i])) {
+        while(stackFront != NULL && getP(ary[i]) <= getP(stackFront->getValue())) {
+          enqueue(qFront,qTail,stackFront -> getValue());
+          pop(stackFront);
+        }
+        push(stackFront, ary[i]);
       }
-      printQ(stackFront);
   }
   while(stackFront != NULL) {
     enqueue(qFront, qTail, stackFront->getValue());
     pop(stackFront);
   }
-  printQ(qFront);
+}
+
+void btMaker(Node* qTail, Node* qFront,NodeBT* sfc) {
+  char pfe[20];
+  arrayNuller(pfe);
+  int counter = 0;
+  Node* current = qFront;
+  while(current != NULL) {
+    pfe[counter] = current -> getValue();
+    current = current->getNext();
+    counter++;
+  }
+  for(int i = 0; i << counter; i++) {
+
+    if(isOp(pfe[i])) {
+      NodeBT* temp = new NodeBT(pfe[i]);
+      NodeBT* right = sfc;
+      popBt(sfc);
+      NodeBT* left = sfc;
+      temp ->setL(left);
+      temp -> setR(right);
+      pushBt(sfc,temp);
+    }
+    else {
+      NodeBT* temp = new NodeBT(pfe[i]);
+      pushBt(sfc, temp);
+    }
+  }
+  printBT(sfc);
+}
+
+void pushBt(NodeBT* &stackFront, NodeBT* temp) {
+  if(stackFront == NULL) {
+    stackFront = temp;
+  }
+  else {
+    temp -> setN(stackFront);
+    stackFront = temp;
+  }
+}
+
+void popBt(NodeBT* &sfc) {
+  if(sfc != NULL) {
+  NodeBT* temp = sfc;
+  sfc = sfc -> getN();
+  delete temp;
+  }
 }
 
 void printQ(Node* head) {
@@ -189,9 +264,6 @@ int getP(char a) {
   if(a == '+' || a == '-') {
     return 1;
   }
-  if(a == '^') {
-    return 3;
-  }
   if(a == '/' || a== '*') {
     return 2;
   }
@@ -207,4 +279,15 @@ bool isOp(char a) {
     return true;
   }
   return false;
+}
+
+void printBT(NodeBT* sfc) {
+  if(sfc == NULL) {
+    return;
+  }
+  else {
+    printBT(sfc->getL());
+    cout << sfc -> getValueBT();
+    printBT(sfc->getR());
+  }
 }
