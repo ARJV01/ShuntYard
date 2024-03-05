@@ -121,7 +121,7 @@ void enqueue(Node* &qFront, Node* &qTail,char newValue) {
   qTail -> setNext(temp);
   }
   qTail = temp;
-  if(qTail == NULL) {
+  if(qFront == NULL) {
     qFront = qTail;
   }
 }
@@ -131,9 +131,6 @@ Node* dequeue(Node* &qFront) {
   if (qFront != NULL) {
     qFront = qFront -> getNext();
     delete temp;
-  }
-  if (qFront == NULL) {
-    qFront = NULL;
   }
   return qFront; 
 }
@@ -164,6 +161,7 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
 	}
 	push(stackFront, ary[i]);
       }
+      printQ(stackFront);
   }
   while(stackFront != NULL) {
     enqueue(qFront, qTail, stackFront->getValue());
@@ -180,11 +178,11 @@ void printQ(Node* head) {
     temp[count] = head -> getValue();
     head = head->getNext();
     count++;
-    cout << count << endl;
   }
   for(int i = 0; i < count; i++) {
-    cout << temp[i] << endl;
+    cout << temp[i];
   }
+  cout << endl;
 }
 
 int getP(char a) {
