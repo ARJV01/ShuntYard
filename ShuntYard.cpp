@@ -216,29 +216,29 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc) {
     counter++;
   }
 
-  NodeBT* stackFront = NULL;
+  
 
   for(int i = 0; i < counter; i++) {
     if(isOp(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
-      NodeBT* right = stackFront;
-      popBt(stackFront);
-      NodeBT* left = stackFront;
-      popBt(stackFront);
+      NodeBT* right = sfc;
+      popBt(sfc);
+      NodeBT* left = sfc;
       temp -> setL(left);
       temp -> setR(right);
-      pushBt(stackFront,temp);
-      cout << "right " << stackFront ->getR() ->getValueBT() << endl;
-      cout << "left " << stackFront->getL() ->getValueBT() << endl;
+      pushBt(sfc, temp);
+      cout << "left " << temp -> getL() -> getValueBT() << endl;
+      cout << "right " << temp -> getR() -> getValueBT() << endl;
+      cout << "parent " << temp -> getValueBT() << endl;
     }
     else if(isdigit(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
-      pushBt(stackFront, temp);
+      pushBt(sfc,temp);
     }
   }
-  sfc = stackFront;
   //cout << "right of right " << sfc->getR()->getR()->getValueBT() << endl;
 }
+
 
 void pushBt(NodeBT* &stackFront, NodeBT* temp) {
   if(stackFront == NULL) {
