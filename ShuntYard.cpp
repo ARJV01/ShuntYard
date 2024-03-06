@@ -70,7 +70,7 @@ public:
 
 void popBt(NodeBT* &sfc);
 void printBT(NodeBT* sfc);
-void btMaker(Node* qTail, Node* qFront,NodeBT* sfc);//makes the binary tree
+void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc);//makes the binary tree
 int getP(char a);// will return the precedence of an operator
 bool isOp(char a);//will determine if somthing is an operator
 void printQ(Node* head);//will print the queue, used for debugging
@@ -198,7 +198,7 @@ void shunter(char ary[],Node* &stackFront,Node* &qTail,Node* &qFront,int counter
   }
 }
 
-void btMaker(Node* qTail, Node* qFront,NodeBT* sfc) {
+void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc) {
   char pfe[20];
   arrayNuller(pfe);
   int counter = 0;
@@ -208,9 +208,10 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* sfc) {
     current = current->getNext();
     counter++;
   }
-  for(int i = 0; i << counter; i++) {
 
+  for(int i = 0; i < counter; i++) {
     if(isOp(pfe[i])) {
+      cout << "is op" << endl;
       NodeBT* temp = new NodeBT(pfe[i]);
       NodeBT* right = sfc;
       popBt(sfc);
@@ -220,6 +221,7 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* sfc) {
       pushBt(sfc,temp);
     }
     else {
+      cout << "is num" << endl;
       NodeBT* temp = new NodeBT(pfe[i]);
       pushBt(sfc, temp);
     }
@@ -282,12 +284,13 @@ bool isOp(char a) {
 }
 
 void printBT(NodeBT* sfc) {
-  if(sfc == NULL) {
-    return;
-  }
-  else {
+  if(sfc != NULL) {
+    cout << "sfc is not null" << sfc->getValueBT() << endl;
     printBT(sfc->getL());
     cout << sfc -> getValueBT();
     printBT(sfc->getR());
   }
+  else {
+    return;
+    }
 }
