@@ -70,6 +70,7 @@ public:
 
 void popBt(NodeBT* &sfc);
 void printBT(NodeBT* sfc);
+void toInfix(NodeBT* root, char (&ife)[], int &counter);
 void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc);//makes the binary tree
 int getP(char a);// will return the precedence of an operator
 bool isOp(char a);//will determine if somthing is an operator
@@ -90,9 +91,11 @@ int main() {
   NodeBT* sfc = NULL;
   char input[20];
   char ary[20];
+  char ife[20];
   arrayNuller(input);
   arrayNuller(ary);
   int counter = 0;
+  int counter1 = 0;
   cout << "please enter the equation" << endl;
   cin.getline(input, 80);
   for(int i = 0; i < 20; i++) {
@@ -104,6 +107,10 @@ int main() {
   shunter(ary,stackFront,qTail,qFront,counter);
   printQ(qFront);
   btMaker(qTail,qFront,sfc);
+  toInfix(sfc,ife,counter);
+  for(int i = 0; i< 20;i++) {
+    cout << ife[i];
+  }
   return 0;
 }
 
@@ -209,24 +216,28 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc) {
     counter++;
   }
 
+  NodeBT* stackFront = NULL;
+
   for(int i = 0; i < counter; i++) {
     if(isOp(pfe[i])) {
-      cout << "is op" << endl;
       NodeBT* temp = new NodeBT(pfe[i]);
-      NodeBT* right = sfc;
-      popBt(sfc);
-      NodeBT* left = sfc;
-      temp ->setL(left);
+      NodeBT* right = stackFront;
+      popBt(stackFront);
+      NodeBT* left = stackFront;
+      popBt(stackFront);
+      temp -> setL(left);
       temp -> setR(right);
-      pushBt(sfc,temp);
+      pushBt(stackFront,temp);
+      cout << "right " << stackFront ->getR() ->getValueBT() << endl;
+      cout << "left " << stackFront->getL() ->getValueBT() << endl;
     }
-    else {
-      cout << "is num" << endl;
+    else if(isdigit(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
-      pushBt(sfc, temp);
+      pushBt(stackFront, temp);
     }
   }
-  printBT(sfc);
+  sfc = stackFront;
+  //cout << "right of right " << sfc->getR()->getR()->getValueBT() << endl;
 }
 
 void pushBt(NodeBT* &stackFront, NodeBT* temp) {
@@ -241,11 +252,18 @@ void pushBt(NodeBT* &stackFront, NodeBT* temp) {
 
 void popBt(NodeBT* &sfc) {
   if(sfc != NULL) {
-  NodeBT* temp = sfc;
-  sfc = sfc -> getN();
-  delete temp;
+  NodeBT* temp;
+  temp = sfc;
+  if(temp->getN() != NULL) {
+    sfc = temp->getN();
+    delete temp;
+  }
+  else {
+    sfc = NULL;
+    }
   }
 }
+
 
 void printQ(Node* head) {
   char temp[20];
@@ -283,14 +301,17 @@ bool isOp(char a) {
   return false;
 }
 
-void printBT(NodeBT* sfc) {
-  if(sfc != NULL) {
-    cout << "sfc is not null" << sfc->getValueBT() << endl;
-    printBT(sfc->getL());
-    cout << sfc -> getValueBT();
-    printBT(sfc->getR());
-  }
-  else {
+void toInfix(NodeBT* root, char (&ife)[], int &counter) {
+  if(root == NULL) {
     return;
-    }
+  }
+  if(root->getR() == NULL && root->getL() == NULL) {
+    ife[counter] = root->getValueBT();
+    counter++;
+    return;
+  }
+  toInfix(root->getL(),ife,counter);
+  ife[counter] = root ->getValueBT();
+  counter++;
+  toInfix(root->getR(),ife,counter);
 }
