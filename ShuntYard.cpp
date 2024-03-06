@@ -222,13 +222,17 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc) {
     if(isOp(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
       NodeBT* right = sfc;
+      cout << "the right node before sfc is popped " << right -> getValueBT() << endl;
       popBt(sfc);
+      cout << "the right node after sfc is popped " <<right -> getValueBT() << endl;
+      cout << "the value of sfc after its popped " << sfc -> getValueBT() << endl;
       NodeBT* left = sfc;
+      popBt(sfc);
       temp -> setL(left);
       temp -> setR(right);
       pushBt(sfc, temp);
-      cout << "left " << temp -> getL() -> getValueBT() << endl;
-      cout << "right " << temp -> getR() -> getValueBT() << endl;
+      cout << "left " <<  left -> getValueBT() << endl;
+      cout << "right " << right -> getValueBT() << endl;
       cout << "parent " << temp -> getValueBT() << endl;
     }
     else if(isdigit(pfe[i])) {
