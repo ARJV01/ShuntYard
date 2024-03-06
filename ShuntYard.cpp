@@ -5,72 +5,71 @@
 
 using namespace std;
 
-class Node {
+class Node {//node class for stack and queue
 public:
   char value;
   Node* next;
 
-  Node(char newValue) {
+  Node(char newValue) {//contructor for node
     next = NULL;
     value = newValue;
   }
-  char getValue() {
+  char getValue() {//returns the value
     return value;
   }
-  Node* getNext() {
+  Node* getNext() {//returns next
     return next;
   }
-  void setNext(Node* nextNode) {
+  void setNext(Node* nextNode) {//sets next
     next = nextNode;
   }
-  void printV(Node* node) {
+  void printV(Node* node) {//prints the value
     if(node != NULL) {
     cout << node -> getValue() << endl;
     }
   }
-  ~Node() {}
+  ~Node() {}//destructor
 };
 
-class NodeBT {
+class NodeBT {//node class for binary tree
 public:
   char value;
   NodeBT* right;
   NodeBT* left;
   NodeBT* next;
 
-  NodeBT(char newValue) {
+  NodeBT(char newValue) {//constructor
     left = NULL;
     right = NULL;
     next = NULL;
     value = newValue;
   }
-  char getValueBT() {
+  char getValueBT() {//returns value
     return value;
   }
-  NodeBT* getR() {
+  NodeBT* getR() {//returns right
     return right;
   }
-  void setR(NodeBT* newRight) {
+  void setR(NodeBT* newRight) {//sets right
     right = newRight;
   }
-  NodeBT* getL() {
+  NodeBT* getL() {//returns left
     return left;
   }
-  void setN(NodeBT* newNext) {
+  void setN(NodeBT* newNext) {//sets next
     next = newNext;
   }
-  NodeBT* getN() {
+  NodeBT* getN() {//returns next
     return next;
   }
-  void setL(NodeBT* newLeft) {
+  void setL(NodeBT* newLeft) {//sets left
     left = newLeft;
   }
-  ~NodeBT() {}
+  ~NodeBT() {}//destructor
 };
 
-void popBt(NodeBT* &sfc);
-void printBT(NodeBT* sfc);
-void toInfix(NodeBT* root, char (&ife)[], int &counter);
+void popBt(NodeBT* &sfc,NodeBT* &pN);//pops binary tree nodes from the stack
+void toInfix(NodeBT* root, char (&ife)[], int &counter);//converts the binary tree to infix
 void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc);//makes the binary tree
 int getP(char a);// will return the precedence of an operator
 bool isOp(char a);//will determine if somthing is an operator
@@ -84,7 +83,7 @@ void enqueue(Node* &qFront, Node* &qTail, char newValue);//Puts an new node at t
 Node* dequeue(Node* &qFront);//removes the node at the front of the queue
 void shunter(char ary[], Node* &stackFront, Node* &qTail, Node* &qFront, int counter);// will convert an expression from infix notation to postfix notation.
 
-int main() {
+int main() {//main function
   Node* stackFront = NULL;
   Node* qFront = NULL;
   Node* qTail = NULL;
@@ -105,11 +104,25 @@ int main() {
     }
   }
   shunter(ary,stackFront,qTail,qFront,counter);
+  cout << "the postfix expression:" << endl;
   printQ(qFront);
   btMaker(qTail,qFront,sfc);
-  toInfix(sfc,ife,counter);
-  for(int i = 0; i< 20;i++) {
-    cout << ife[i];
+  bool stillR = true;
+  while(stillR == true) {
+    char input1[20];
+    cout << "please enter infix postfix or prefix" << endl;
+    cin >> input1;
+    if(strcmp(input1,"infix") == 0) {
+      toInfix(sfc,ife,counter);
+      for(int i = 0; i< 20;i++) {
+	cout << ife[i];
+      }
+      cout << endl;
+    }
+    if(strcmp(input1 , "quit") == 0) {
+      stillR = false;
+    }
+  
   }
   return 0;
 }
@@ -216,32 +229,23 @@ void btMaker(Node* qTail, Node* qFront,NodeBT* &sfc) {
     counter++;
   }
 
-  
-
   for(int i = 0; i < counter; i++) {
     if(isOp(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
-      NodeBT* right = sfc;
-      cout << "the right node before sfc is popped " << right -> getValueBT() << endl;
-      popBt(sfc);
-      cout << "the right node after sfc is popped " <<right -> getValueBT() << endl;
-      cout << "the value of sfc after its popped " << sfc -> getValueBT() << endl;
-      NodeBT* left = sfc;
-      popBt(sfc);
+      NodeBT* right;
+      popBt(sfc,right);
+      NodeBT* left;
+      popBt(sfc,left);
       temp -> setL(left);
       temp -> setR(right);
       pushBt(sfc, temp);
-      cout << "left " <<  left -> getValueBT() << endl;
-      cout << "right " << right -> getValueBT() << endl;
-      cout << "parent " << temp -> getValueBT() << endl;
     }
     else if(isdigit(pfe[i])) {
       NodeBT* temp = new NodeBT(pfe[i]);
       pushBt(sfc,temp);
     }
   }
-  //cout << "right of right " << sfc->getR()->getR()->getValueBT() << endl;
-}
+ }
 
 
 void pushBt(NodeBT* &stackFront, NodeBT* temp) {
@@ -254,17 +258,10 @@ void pushBt(NodeBT* &stackFront, NodeBT* temp) {
   }
 }
 
-void popBt(NodeBT* &sfc) {
+void popBt(NodeBT* &sfc,NodeBT* &pN) {
   if(sfc != NULL) {
-  NodeBT* temp;
-  temp = sfc;
-  if(temp->getN() != NULL) {
-    sfc = temp->getN();
-    delete temp;
-  }
-  else {
-    sfc = NULL;
-    }
+    pN = sfc;
+    sfc = sfc->getN();
   }
 }
 
@@ -319,3 +316,4 @@ void toInfix(NodeBT* root, char (&ife)[], int &counter) {
   counter++;
   toInfix(root->getR(),ife,counter);
 }
+
