@@ -116,7 +116,7 @@ int main() {//main function
   bool stillR = true;
   while(stillR == true) {
     char input1[20];
-    cout << "please enter infix postfix or prefix" << endl;
+    cout << "please enter quit infix postfix or prefix" << endl;
     cin >> input1;
     if(strcmp(input1,"infix") == 0) {
       toInfix(sfc,converted,counter);
