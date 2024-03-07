@@ -104,7 +104,7 @@ int main() {//main function
   cout << "please enter the equation" << endl;
   cin.getline(input, 80);
   for(int i = 0; i < 20; i++) {
-    if(input[i] != ' ' && input[i] != '\n' && input[i] != NULL) {
+    if(input[i] != ' ' && input[i] != '\n' && input[i] != '\0') {
       ary[counter] = input[i];
       counter++;
     }
@@ -155,7 +155,7 @@ int main() {//main function
 
 void arrayNuller(char ary[]) {//nulls an array
   for(int i = 0; i < 20; i++) {
-    ary[i] = NULL;
+    ary[i] = '\0';
   }
 }
 
@@ -185,7 +185,7 @@ char peek(Node* stackFront) {//returns the value of the node at the top of the s
   if(stackFront != NULL){
   return stackFront -> getValue();
   }
-  return NULL;
+  return '\0';
 }
 
 void enqueue(Node* &qFront, Node* &qTail,char newValue) {//adds to the tail of the queue
@@ -357,8 +357,8 @@ void toPrefix(NodeBT* root, char (&ife)[], int &counter) {//converts to binary t
   }
   ife[counter] = root ->getValueBT();
   counter++;
-  toPrefix(root->getR(),ife,counter);
   toPrefix(root->getL(),ife,counter);
+  toPrefix(root->getR(),ife,counter);
 }
 void toPostfix(NodeBT* root, char (&ife)[], int &counter) {//converts to binary tree to an postfix expression
   if(root == NULL) {
