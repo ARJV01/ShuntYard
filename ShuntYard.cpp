@@ -128,7 +128,8 @@ int main() {//main function
       counter = 0;
     }
     if(strcmp(input1,"prefix") == 0) {
-      toPrefix(sfc,converted,counter);
+      int zero = 0;
+      toPrefix(sfc,converted,zero);
       for(int i = 0; i< 20;i++) {
         cout << converted[i];
       }
@@ -360,6 +361,10 @@ void toPrefix(NodeBT* root, char (&ife)[], int &counter) {//converts to binary t
   toPrefix(root->getL(),ife,counter);
   toPrefix(root->getR(),ife,counter);
 }
+
+
+
+ 
 void toPostfix(NodeBT* root, char (&ife)[], int &counter) {//converts to binary tree to an postfix expression
   if(root == NULL) {
     return;
